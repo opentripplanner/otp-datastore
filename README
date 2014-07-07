@@ -1,3 +1,15 @@
 Play-based backend for logging OTP queries.
 
-Change the admin password.
+Change the admin password in `initial-data.yml`.
+
+Download and install the [Play Framework 1.2.5.x](http://www.playframework.com/download).  Be sure to add play directory to your PATH variable
+
+`cd otp-datastore`
+
+Run
+
+`play dep`
+
+and
+
+`play run`
