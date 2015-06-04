@@ -1,5 +1,7 @@
 package controllers;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import models.fieldtrip.ScheduledFieldTrip;
 import models.fieldtrip.FieldTripFeedback;
 import models.fieldtrip.FieldTripRequest;
@@ -7,6 +9,10 @@ import models.fieldtrip.GroupItinerary;
 import models.fieldtrip.GTFSTrip;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import static controllers.Application.checkLogin;
 import static controllers.Calltaker.checkAccess;
 import play.*;
@@ -21,6 +27,9 @@ import play.data.binding.As;
 
 import net.tanesha.recaptcha.*;
 
+import javax.ws.rs.core.MediaType;
+import com.sun.jersey.api.client.*;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class FieldTrip extends Application {
     
@@ -167,7 +176,6 @@ public class FieldTrip extends Application {
         renderJSON(gson.toJson(gtfsTrips));
     }
 
-    
     public static void newTrip(long requestId, ScheduledFieldTrip trip, GroupItinerary[] itins, GTFSTrip[][] gtfsTrips) {
         TrinetUser user = checkLogin();        
         checkAccess(user);
@@ -178,7 +186,7 @@ public class FieldTrip extends Application {
         for(int i = 0; i < itins.length; i++) {
             GroupItinerary itin = itins[i];
             for(GTFSTrip gtrip : gtfsTrips[i]) {
-                List<GTFSTrip> tripsInUse = GTFSTrip.find("agencyAndId = ?", gtrip.agencyAndId).fetch();
+                List<GTFSTrip> tripsInUse = GTFSTrip.find("tripHash = ?", gtrip.tripHash).fetch();
                 
                 if(!tripsInUse.isEmpty()) {
                     int capacityInUse = 0;
@@ -188,7 +196,7 @@ public class FieldTrip extends Application {
                         if(!tripInUse.groupItinerary.fieldTrip.request.travelDate.equals(ftRequest.travelDate)) continue;
                             
                         // do the stop ranges overlap?
-                        if(gtrip.fromStopIndex > tripInUse.toStopIndex || gtrip.toStopIndex < tripInUse.fromStopIndex) continue;
+                        if(gtrip.fromStopIndex >= tripInUse.toStopIndex || gtrip.toStopIndex <= tripInUse.fromStopIndex) continue;
                         
                         capacityInUse += tripInUse.groupItinerary.passengers;
                     }
@@ -209,6 +217,7 @@ public class FieldTrip extends Application {
         }            
         for(ScheduledFieldTrip delTrip : tripsToDelete) {
             delTrip.delete();
+            ftRequest.trips.remove(delTrip);
         }
 
 
@@ -225,8 +234,8 @@ public class FieldTrip extends Application {
         // add the ScheduledFieldTrip to the request
     
         ftRequest.trips.add(trip);
-                
-        System.out.println("saved ScheduledFieldTrip, id="+trip.id);
+        ftRequest.updateTripStatusFields();
+        ftRequest.save();
         
         // create the GroupItineraries and GTFSTrips
         trip.groupItineraries = new ArrayList<GroupItinerary>();
@@ -244,7 +253,7 @@ public class FieldTrip extends Application {
             }
         }
         
-        
+
         Long id = trip.id;
         renderJSON(id);
     }
@@ -293,28 +302,63 @@ public class FieldTrip extends Application {
         String privateKey = (String) Play.configuration.get("recaptcha.private_key");
 
         ReCaptcha captcha = ReCaptchaFactory.newReCaptcha(publicKey, privateKey, false);
-        ReCaptchaResponse response = captcha.checkAnswer(request.remoteAddress, recaptcha_challenge_field, recaptcha_response_field);
+        ReCaptchaResponse captchaResponse = captcha.checkAnswer(request.remoteAddress, recaptcha_challenge_field, recaptcha_response_field);
 
-        boolean validRecaptcha = false;
+        String errCode;
         
-        if (response.isValid()) {
-            validRecaptcha = true;
+        if (!captchaResponse.isValid()) {
+            errCode = "err_recaptcha";
+        }
+        else if(req.teacherName == null || req.teacherName.length() == 0) {
+            errCode = "err_teachername";
+        }
+        else if(!checkDate(req.travelDate)) {
+            errCode = "err_traveldate";
         }
         else {
-            render(req, validRecaptcha);
-        }
-        
-        if(req.teacherName != null && validRecaptcha) {
             req.id = null;
             req.save();
             Long id = req.id;
-            render(req, validRecaptcha);
+            errCode = "ok";
+        }
+        
+        render(req, errCode);
+    }
+    
+    @Util
+    protected static boolean checkDate(Date date) {
+        if(date == null) return false;
+        
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, 1);
+        
+        Calendar now = Calendar.getInstance();
+        
+        //if(cal.after(now)) return true;
+        
+        return true;	
+    }
+
+    public static void getRequest(long requestId) {
+        TrinetUser user = checkLogin();        
+        checkAccess(user);
+
+        FieldTripRequest req = FieldTripRequest.findById(requestId);
+
+        System.out.println("OTS = " + req.outboundTripStatus);
+        if(req != null) {
+            Gson gson = new GsonBuilder()
+              .excludeFieldsWithoutExposeAnnotation()  
+              .serializeNulls()
+              .create();
+            renderJSON(gson.toJson(req));
         }
         else {
             badRequest();
-        }
+        }   
     }
-    
+
     public static void getRequests(Integer limit) {
         TrinetUser user = checkLogin();        
         checkAccess(user);
@@ -329,6 +373,37 @@ public class FieldTrip extends Application {
 
         Gson gson = new GsonBuilder()
           .excludeFieldsWithoutExposeAnnotation()  
+          .serializeNulls()
+          .create();
+        renderJSON(gson.toJson(requests));
+    }
+
+    public static void getRequestsSummary(Integer limit) {
+        TrinetUser user = checkLogin();        
+        checkAccess(user);
+      
+        List<FieldTripRequest> requests;
+        String sql = "order by timeStamp desc";
+        if(limit == null)
+            requests = FieldTripRequest.find(sql).fetch();
+        else {
+            requests = FieldTripRequest.find(sql).fetch(limit);
+        }
+
+        Gson gson = new GsonBuilder()
+          .excludeFieldsWithoutExposeAnnotation()
+          .setExclusionStrategies(new ExclusionStrategy() {
+
+            public boolean shouldSkipField(FieldAttributes fa) {
+                String name = fa.getName();
+                return(name.equals("trips") || name.equals("notes") || name.equals("feedback"));
+            }
+
+            public boolean shouldSkipClass(Class<?> type) {
+                return false;
+            }
+              
+          })
           .serializeNulls()
           .create();
         renderJSON(gson.toJson(requests));
@@ -386,6 +461,16 @@ public class FieldTrip extends Application {
         else {
             badRequest();
         }        
+    }
+
+    public static void updateRequests() {
+        List<FieldTripRequest> requests = FieldTripRequest.find("").fetch();
+        for(FieldTripRequest req : requests) {
+            req.updateTripStatusFields();
+            req.save();
+        }
+        String status = "Finished updating requests.";
+        render(status);
     }
     
     /* FieldTripFeedback */
@@ -447,6 +532,22 @@ public class FieldTrip extends Application {
         note.delete();
         renderJSON(noteId);
     }
+
+    public static void editSubmitterNotes(String notes, long requestId) {
+        TrinetUser user = checkLogin();        
+        checkAccess(user);
+
+        FieldTripRequest req = FieldTripRequest.findById(requestId);
+        if(req != null) {
+            req.submitterNotes = notes;
+            req.save();
+            
+            renderJSON(requestId);
+        }
+        else {
+            badRequest();
+        }
+    }
     
     public static void searchRequests(String query, String teacherValue, String schoolValue, @As("MM/dd/yyyy") Date date1, @As("MM/dd/yyyy") Date date2) {
         TrinetUser user = checkLogin();        
@@ -472,5 +573,5 @@ public class FieldTrip extends Application {
             render(req);
         }
     }
-    
+
 }
