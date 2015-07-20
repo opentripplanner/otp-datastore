@@ -81,7 +81,25 @@ public class Application extends Controller {
         System.out.println("redirecting to: " + redirectUrl);
         redirect(redirectUrl);
     }
-        
+
+    public static void verifyLoginDefault(String session, String username) {
+
+        TrinetUser user = TrinetUser.find("byUsername", username).first();
+
+        if(user != null) {
+            Session userSession = new Session(session, user);
+            userSession.save();
+            System.out.println("initialized session " + session + " for user "+username);
+
+            Map<String, Boolean> resp = new HashMap<String, Boolean>();
+            resp.put("success", true);
+            renderJSON(resp);
+        }
+
+        badRequest();
+    }
+
+
     public static String nextSessionId() {
         return new BigInteger(130, random).toString(32);
     }

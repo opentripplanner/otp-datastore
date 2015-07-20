@@ -51,6 +51,7 @@ GET      /auth/initLogin                        Application.initLogin
 GET      /auth/checkSession                     Application.checkSession
 GET      /auth/newSession                       Application.newSession
 GET      /auth/verifyLogin                      Application.verifyLogin
+GET      /auth/verifyLoginDefault               Application.verifyLoginDefault
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
