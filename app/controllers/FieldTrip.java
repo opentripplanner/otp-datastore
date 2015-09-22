@@ -13,6 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
 import static controllers.Application.checkLogin;
 import static controllers.Calltaker.checkAccess;
 import play.*;
@@ -25,11 +26,16 @@ import models.*;
 import models.fieldtrip.FieldTripNote;
 import play.data.binding.As;
 
-import net.tanesha.recaptcha.*;
-
 import javax.ws.rs.core.MediaType;
 import com.sun.jersey.api.client.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
 import org.apache.commons.codec.digest.DigestUtils;
+
 
 public class FieldTrip extends Application {
     
@@ -301,28 +307,74 @@ public class FieldTrip extends Application {
         String publicKey = (String) Play.configuration.get("recaptcha.public_key");
         String privateKey = (String) Play.configuration.get("recaptcha.private_key");
 
-        ReCaptcha captcha = ReCaptchaFactory.newReCaptcha(publicKey, privateKey, false);
-        ReCaptchaResponse captchaResponse = captcha.checkAnswer(request.remoteAddress, recaptcha_challenge_field, recaptcha_response_field);
+        String gRecaptchaResponse = params.get("g-recaptcha-response");
 
-        String errCode;
-        
-        if (!captchaResponse.isValid()) {
-            errCode = "err_recaptcha";
+        try {
+            URL url = new URL("https://www.google.com/recaptcha/api/siteverify");
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+            // add request header
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+            con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+            String postParams = "secret=" + privateKey + "&response="
+                    + gRecaptchaResponse;
+
+            // Send post request
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes(postParams);
+            wr.flush();
+            wr.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer recaptchaResponse = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                recaptchaResponse.append(inputLine);
+            }
+            in.close();
+
+            JsonReader jsonReader = new JsonReader(new StringReader(recaptchaResponse.toString()));
+            jsonReader.beginObject();
+            boolean recaptchaSuccess = false;
+            while (jsonReader.hasNext()) {
+                String name = jsonReader.nextName();
+                if(name.equals("success")) {
+                    recaptchaSuccess = jsonReader.nextBoolean();
+                }
+                else {
+                    jsonReader.skipValue();
+                }
+            }
+            jsonReader.endObject();
+            jsonReader.close();
+
+            String errCode;
+
+            if (!recaptchaSuccess) {
+                errCode = "err_recaptcha";
+            }
+            else if(req.teacherName == null || req.teacherName.length() == 0) {
+                errCode = "err_teachername";
+            }
+            else if(!checkDate(req.travelDate)) {
+                errCode = "err_traveldate";
+            }
+            else {
+                req.id = null;
+                req.save();
+                errCode = "ok";
+            }
+
+            render(req, errCode);
         }
-        else if(req.teacherName == null || req.teacherName.length() == 0) {
-            errCode = "err_teachername";
+        catch(Exception e) {
+            e.printStackTrace();
+            badRequest();
         }
-        else if(!checkDate(req.travelDate)) {
-            errCode = "err_traveldate";
-        }
-        else {
-            req.id = null;
-            req.save();
-            Long id = req.id;
-            errCode = "ok";
-        }
-        
-        render(req, errCode);
     }
     
     @Util
