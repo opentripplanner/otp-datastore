@@ -515,6 +515,24 @@ public class FieldTrip extends Application {
         }        
     }
 
+    public static void setRequestGroupSize(long requestId, int numStudents, int numChaperones, int minimumAge, int maximumAge) {
+        TrinetUser user = checkLogin();
+        checkAccess(user);
+
+        FieldTripRequest req = FieldTripRequest.findById(requestId);
+        if(req != null) {
+            req.numStudents = numStudents;
+            req.numChaperones = numChaperones;
+            req.minimumAge = minimumAge;
+            req.maximumAge = maximumAge;
+            req.save();
+            renderJSON(requestId);
+        }
+        else {
+            badRequest();
+        }
+    }
+
     public static void updateRequests() {
         List<FieldTripRequest> requests = FieldTripRequest.find("").fetch();
         for(FieldTripRequest req : requests) {

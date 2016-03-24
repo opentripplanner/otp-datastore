@@ -33,6 +33,7 @@ POST    /fieldtrip/setOutboundTrip              FieldTrip.setOutboundTrip
 POST    /fieldtrip/setRequestStatus             FieldTrip.setRequestStatus
 POST    /fieldtrip/updateRequests               FieldTrip.updateRequests
 POST    /fieldtrip/editSubmitterNotes           FieldTrip.editSubmitterNotes
+POST    /fieldtrip/setRequestGroupSize          FieldTrip.setRequestGroupSize
 
 POST    /public/fieldtrip/newRequest            FieldTrip.newRequest
 GET     /public/fieldtrip/newRequestForm        FieldTrip.newRequestForm
