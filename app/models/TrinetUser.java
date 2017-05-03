@@ -19,18 +19,25 @@ public class TrinetUser extends Model {
     public String username;
     
     public String role;
+
+    public String status = "active"; // "active" or "inactive"
     
     @Override
     public String toString() {
         return String.format("TrinetUser %s (%s)", username, role);
     }
-    
+
+    public boolean isActive() {
+        // assume that a null status indicates an active user
+        // (i.e. one from before when the status field was implemented)
+        return status == null || status.equals("active");
+    }
+
     public boolean hasCalltakerAccess() {
-        return role.equals("calltaker") || role.equals("all");
+        return isActive() && (role.equals("calltaker") || role.equals("all"));
     }
 
     public boolean hasFieldTripAccess() {
-        return role.equals("fieldtrip") || role.equals("all");
+        return isActive() && (role.equals("fieldtrip") || role.equals("all"));
     }
-
 }

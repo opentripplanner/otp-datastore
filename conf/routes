@@ -42,8 +42,10 @@ POST    /public/fieldtrip/addFeedback           FieldTrip.addFeedback
 
 
 #Admin
-GET      /admin/users                           Admin.getUsers
-POST     /admin/deleteUser                      Admin.deleteUser
+GET      /admin/users                           Admin.getActiveUsers
+GET      /admin/inactiveUsers                   Admin.getInactiveUsers
+POST     /admin/deactivateUser                  Admin.deactivateUser
+POST     /admin/reactivateUser                  Admin.reactivateUser
 POST     /admin/addUser                         Admin.addUser
 
 # Trinet Authentication

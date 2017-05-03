@@ -2,14 +2,14 @@
 
 <a href="@{Secure.logout()}">Log out</a>
 
-<p><b>All users:</b>
+<p><b>All Active Users:</b>
 <table border=0 cellpadding=4 cellspacing=6>
     <tr>
         <td style='background-color: #444; color: white'>TriNet Username</td> 
         <td style='background-color: #444; color: white'>User Role</td> 
         <td style='background-color: #444; color: white'>Other Actions</td> 
-    </tr>    
-#{list users, as:'user'}
+    </tr>
+#{list activeUsers, as:'user'}
     <tr>
         <td style='background-color: #ddd;'>${user.username}</td> 
         <td style='background-color: #ddd;'>
@@ -27,7 +27,7 @@
             ]
         </td>
         <td style='background-color: #ddd;'>
-            [<a href="javascript:deleteUser(${user.id}, '${user.username}')">Delete</a>]
+            [<a href="javascript:deactivateUser(${user.id}, '${user.username}')">Deactivate</a>]
         </td>
     </tr>
 #{/list}
@@ -56,8 +56,7 @@ Role: <select name="user.role">
 
 #{/form}
 
-
-<div style="margin-top: 20px; text-align: center;"></div>
+<p><a href="/admin/inactiveUsers">View Inactive Users</a></p>
 
 <script type="text/javascript" language="javascript">
 $(document).ready(function() {
@@ -79,11 +78,11 @@ function addUserClicked() {
     }
 }
 
-function deleteUser(id, name) {
-    var response = confirm('Are you sure you want to delete user ' + name + '?');
+function deactivateUser(id, name) {
+    var response = confirm('Are you sure you want to deactivate user ' + name + '?');
     if(response === true) {    
         console.log('delete '+id);
-        window.location = "/admin/deleteUser?id=" + id;
+        window.location = "/admin/deactivateUser?id=" + id;
     }
 }
 
