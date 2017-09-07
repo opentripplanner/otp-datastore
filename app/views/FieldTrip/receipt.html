@@ -72,14 +72,7 @@
 </tr>
 #{/if}
 
-#{if req.classpassId}
-<tr>
-  <td>Class Pass processing fee</td>
-  <td></td>
-  <td></td>
-  <td>$2.50</td>
-</tr>
-#{/if}
+<!-- FXP 8/17/17 NOTE: removed HTML row with 'Class Pass processing fee $2.50', as well as the 2.5 added to req.classpassId in the Grand Total calculation below -->
 
 <tr style="border: 2px solid #ccc;">
   <td style="border-top: 2px solid #ccc;"><b>Grand Total</b></td>
@@ -87,7 +80,7 @@
   <td style="border-top: 2px solid #ccc;">&nbsp;</td>
   <td style="border-top: 2px solid #ccc;">
     #{if req.classpassId}
-      $${(req.numStudents + req.numChaperones + 2.5).format("0.00")}
+      $${(req.numStudents + req.numChaperones).format("0.00")}
     #{/if}
     #{else}
       $${(req.numStudents * 3.3 + req.numChaperones * 5).format("0.00")}
