@@ -1,17 +1,25 @@
+#{stylesheet 'main.css' /}
+
+<!-- Header start -->
+<div class="standardheader">
+    <h1>Field Trip Request Form</h1>
+    <div class="first">
+        <p class="h1sub">Complete and return this form to request a field trip if you wish to travel on TriMet with a group of 15 or more.
+        <u>Trips <b>must</b> be scheduled and paid for (if applicable) at least two weeks in advance</u>. If you have any questions, please email us at fieldtrips@trimet.org or call 503-962-2424, option 4.
+        </p>
+    </div>
+</div>
+<!-- Header end -->
+
 #{script 'jquery-1.8.2.js' /}
 #{script 'jquery-ui-1.9.1.custom.js' /}
 #{stylesheet 'jquery-ui/jquery-ui-1.9.1.custom.css' /}
-#{stylesheet 'main.css' /}
 
+<div class="fullwidth">
+<div class="contentcontainer">
+<div class="row">
+<div class="col-xs-12 col-sm-0 col-sm-offset-1 col-md-0 col-md-offset-1">
 <form action="newRequest" id="requestForm" method="post">
-
-<div class="mainContent">
-<h2>Field Trip Request Form</h2>
-
-Complete and return this form to request a field trip if you wish to travel on 
-TriMet with a group of 15 or more.  <u>Trips must be scheduled and paid for (if 
-applicable) at least two weeks in advance</u>.  If you have any questions, please 
-email us at fieldtrips@trimet.org or call 503-962-2424, option 4.
 
 <h3>Contact Information</h3>
 
@@ -108,9 +116,9 @@ email us at fieldtrips@trimet.org or call 503-962-2424, option 4.
 
 Your group can use regular TriMet tickets/passes, or you can purchase a Class 
 Pass – our discounted group fare.  The Class Pass is only $1 per person (students 
-ages 7-18 and/or high school students, teachers and chaperones) round trip plus 
-a <b>$2.50 processing fee</b>. Payment is by check, money order or credit card 
-only. If you plan to pay with a credit card, please send your card details via fax; 
+ages 7-18 and/or high school students, teachers and chaperones) round trip.
+Payment is by check, money order or credit card only.
+If you plan to pay with a credit card, please send your card details via fax; 
 do not email credit card information or enter it on this form.
 
 <p>
@@ -134,14 +142,16 @@ Please enter the following text:
 
 </form>
 
-  
+
 <div style="text-align: center; font-weight: bold; margin-top: 2em;">Please verify that all information is correctly entered prior to submitting.</div>
-<div class="buttonRow">
-    <div id="submitLink" style="cursor:pointer; border: 2px solid gray; width: 250px; padding: 3px; margin: 4px auto; background: white;">Submit Request</div>
+<div class="buttonRow" style="text-align: center;">
+    <button class="button" id="submitLink" style="cursor:pointer; width: 250px; padding: 3px; margin: 4px auto;">Submit Request</button>
 </div>
 
 </div>
-
+</div> <!-- end row -->
+</div>
+</div>
 
 <!-- initialization of interactive fields -->
 <script type="text/javascript" language="javascript">
@@ -215,7 +225,4 @@ function constructTime(prefix) {
     
     return (hour < 10 ? "0" : "") + hour + ":" + (minute < 10 ? "0" : "") + minute + ampmStr;
 }
-
-
-
 </script>
