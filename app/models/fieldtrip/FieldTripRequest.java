@@ -92,6 +92,9 @@ public class FieldTripRequest extends GenericModel  {
     public Date arriveSchoolTime;
 
     @Expose
+    public String ticketType;
+
+    @Expose
     public String paymentPreference;
 
     @Expose
