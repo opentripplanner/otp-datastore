@@ -4,8 +4,22 @@
 <div class="standardheader">
     <h1>Field Trip Request Form</h1>
     <div class="first">
-        <p class="h1sub">Complete and return this form to request a field trip if you wish to travel on TriMet with a group of 15 or more.
-            <u>Trips <b>must</b> be scheduled and paid for (if applicable) at least two weeks in advance</u>. If you have any questions, please email us at fieldtrips@trimet.org or call 503-962-2424, option 4.
+        <p class="h1sub">
+            Complete and submit this form to request a field trip using TriMet buses or MAX light rail.
+            <ul>
+                <li>Requests must be received and paid for (if applicable) at least two weeks in advance.</li>
+                <li>Field Trips may only be scheduled on weekdays during off-peak hours (9 a.m. – 3 p.m. and after 6 p.m.)</li>
+                <li>Your group may use regular TriMet tickets or a discounted group fare (Class Pass).</li>
+                <ul>
+                    <li>A Class Pass allows your field trip to travel on TriMet for $1 per person for the duration of the field trip.</li>
+                    <ul>
+                        <li>Groups of 15 or more people (including students (7-18 or in high school), teachers, and chaperones) are eligible.</li>
+                        <li>Your Class Pass fare will be loaded onto a Hop card, which you'll tap when boarding the bus or entering a light rail platform. You can either request a new one or we can reload an existing Class Pass Hop card.</li>
+                    </ul>
+                </ul>
+                <li>Due to vehicle capacities, groups larger than 40 people per bus and 80 per MAX train will be split (and issued separate Class Passes if applicable). Smaller groups may also be split to manage capacities.</li>
+            </ul>
+            If you have any questions or need to modify your trip, please contact us at <a href="mailto:fieldtrips@trimet.org">fieldtrips@trimet.org</a> or give us a call at 503-962-2424, option 4.
         </p>
     </div>
 </div>
@@ -247,7 +261,6 @@ function submitClicked() {
 
     if (hopType === 'hop_reload') {
         $("#classpassId").val($("#classpassIdInput").val());
-        console.log('set classpassId to ' + $("#classpassId").val());
     }
 
     document.forms["requestForm"].submit();
