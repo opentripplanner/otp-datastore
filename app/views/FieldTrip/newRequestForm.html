@@ -167,12 +167,12 @@
                         <div style="margin-top: 10px; text-decoration: underline;">
                             Class Pass Payment Preference:
                         </div>
-                        <input name="hopPayPref" type="radio" value="phone_cc" checked /> Credit Card (I will pay by phone)<br>
+                        <input name="hopPayPref" type="radio" value="phone_cc" /> Credit Card (I will pay by phone)<br>
                         <input name="hopPayPref" type="radio" value="fax_cc" /> Credit Card (I will fax my card information)<br>
                         <input name="hopPayPref" type="radio" value="mail_check" /> I will mail a check or money order<br>
 
                         <div style="margin-top: 10px; text-decoration: underline;">
-                            <input type="checkbox" name="req.requireInvoice" /> I need an invoice before paying
+                            <input type="checkbox" id="requireInvoice" name="req.requireInvoice" /> I need an invoice before paying
                         </div>
                     </div>
 
@@ -253,14 +253,22 @@ function submitClicked() {
     var paymentType = $("input[name='paymentType']:checked").val();
     var hopType = $("input[name='hopType']:checked").val();
     var ticketType = paymentType === "own_tickets" ? paymentType : hopType;
+    var hopPayPref = $("input[name='hopPayPref']:checked").val()
+    var requireInvoice = $("#requireInvoice").is(":checked");
     $("#ticketType").val(ticketType);
 
     if (ticketType !== 'own_tickets') {
-        $("#paymentPreference").val($("input[name='hopPayPref']:checked").val());
+        $("#paymentPreference").val();
     }
 
     if (hopType === 'hop_reload') {
-        $("#classpassId").val($("#classpassIdInput").val());
+        $("#classpassId").val($("#classpassIdInput").val(hopPayPref));
+    }
+
+    // confirm valid payment inputs
+    if(requireInvoice && !hopPayPref) {
+      alert("Please specify a payment preference if invoice is required");
+      return
     }
 
     document.forms["requestForm"].submit();
