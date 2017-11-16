@@ -258,11 +258,11 @@ function submitClicked() {
     $("#ticketType").val(ticketType);
 
     if (ticketType !== 'own_tickets') {
-        $("#paymentPreference").val();
+        $("#paymentPreference").val(hopPayPref);
     }
 
     if (hopType === 'hop_reload') {
-        $("#classpassId").val($("#classpassIdInput").val(hopPayPref));
+        $("#classpassId").val($("#classpassIdInput").val());
     }
 
     // confirm valid payment inputs
