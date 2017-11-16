@@ -104,6 +104,18 @@ public class FieldTripRequest extends GenericModel  {
     public String classpassId;
 
     @Expose
+    public String ccName;
+
+    @Expose
+    public String ccType;
+
+    @Expose
+    public String ccLastFour;
+
+    @Expose
+    public String checkNumber;
+
+    @Expose
     public String outboundTripStatus;
 
     @Expose

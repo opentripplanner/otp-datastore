@@ -496,7 +496,38 @@ public class FieldTrip extends Application {
             badRequest();
         }        
     }
-    
+
+    public static void setRequestPaymentInfo(long requestId, String classpassId, String paymentPreference, String ccType, String ccName, String ccLastFour, String checkNumber) {
+        TrinetUser user = checkLogin();
+        checkAccess(user);
+
+        FieldTripRequest req = FieldTripRequest.findById(requestId);
+        if(req != null) {
+            if(classpassId != null && classpassId.length() == 0) classpassId = null;
+            req.classpassId = classpassId;
+
+            req.paymentPreference = paymentPreference;
+
+            if(ccType != null && ccType.length() == 0) ccType = null;
+            req.ccType = ccType;
+
+            if(ccName != null && ccName.length() == 0) ccName = null;
+            req.ccName = ccName;
+
+            if(ccLastFour != null && ccLastFour.length() == 0) ccLastFour = null;
+            req.ccLastFour = ccLastFour;
+
+            if(checkNumber != null && checkNumber.length() == 0) checkNumber = null;
+            req.checkNumber = checkNumber;
+
+            req.save();
+            renderJSON(requestId);
+        }
+        else {
+            badRequest();
+        }
+    }
+
     public static void setRequestDate(long requestId, @As("MM/dd/yyyy") Date date) {
         TrinetUser user = checkLogin();        
         checkAccess(user);
