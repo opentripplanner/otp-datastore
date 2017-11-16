@@ -10,15 +10,30 @@
 <b>Travel Date</b>: ${(req.travelDate).format("MMMM dd, yyyy")}<br>
 <b>Destination</b>: ${req.endLocation}<br>&nbsp;<br>
 
-<b>Payment</b>: 
+<b>Payment</b>:
+<ul>
 #{if req.classpassId}
-  Class Pass #${req.classpassId}
+  <li>Class Pass Hop Card #: ${req.classpassId}</li>
 #{/if}
-#{else}
-  Standard Fare
-#{/else}
 
-<table border="0" cellpadding="6px" cellspacing="0" style="width: 100%">
+#{if req.ccType}
+  <li>Credit Card Type: ${req.ccType}</li>
+#{/if}
+
+#{if req.ccName}
+  <li>Name on Credit Card: ${req.ccName}</li>
+#{/if}
+
+#{if req.classpassId}
+  <li>Credit Card Last Four Digits: ${req.ccLastFour}</li>
+#{/if}
+
+#{if req.checkNumber}
+  <li>Check / Money Order Number: ${req.checkNumber}</li>
+#{/if}
+</ul>
+
+<table border="0" cellpadding="6px" cellspacing="0" style="width: 100%;">
 <tr style="background: #ccc;">
   <th style="width:60%; text-align: left;"></th>
   <th style="width:10%; text-align: left;">Quantity</th>
