@@ -255,22 +255,33 @@ function submitClicked() {
     var ticketType = paymentType === "own_tickets" ? paymentType : hopType;
     var hopPayPref = $("input[name='hopPayPref']:checked").val()
     var requireInvoice = $("#requireInvoice").is(":checked");
-    $("#ticketType").val(ticketType);
-
-    if (ticketType !== 'own_tickets') {
-        $("#paymentPreference").val(hopPayPref);
-    }
-
-    if (hopType === 'hop_reload') {
-        $("#classpassId").val($("#classpassIdInput").val());
-    }
+    var classpassId = $("#classpassIdInput").val();
+    if (classpassId) classpassId = classpassId.trim();
 
     // confirm valid payment inputs
+    if(ticketType !== 'own_tickets' && !hopPayPref) {
+      alert("Please specify a payment preference if paying via Hop Card");
+      return
+    }
     if(requireInvoice && !hopPayPref) {
       alert("Please specify a payment preference if invoice is required");
       return
     }
+    if(hopType === 'hop_reload' && (classpassId.length !== 16 || isNaN(classpassId))) {
+      alert("Please enter a valid 16-digit Hop Card number");
+      return
+    }
 
+    // set payment-related hidden field values
+    $("#ticketType").val(ticketType);
+    if (ticketType !== 'own_tickets') {
+        $("#paymentPreference").val(hopPayPref);
+    }
+    if (hopType === 'hop_reload') {
+        $("#classpassId").val(classpassId);
+    }
+
+    // submit the form
     document.forms["requestForm"].submit();
 }
 
