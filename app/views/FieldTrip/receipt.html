@@ -10,34 +10,74 @@
 <b>Travel Date</b>: ${(req.travelDate).format("MMMM dd, yyyy")}<br>
 <b>Destination</b>: ${req.endLocation}<br>&nbsp;<br>
 
-<b>Payment</b>:
-<ul>
-#{if req.classpassId}
-  <li>Class Pass Hop Card #: ${req.classpassId}</li>
-#{/if}
+<b>Payment Information</b>:
 
-#{if req.ccType}
-  <li>Credit Card Type: ${req.ccType}</li>
+<ul style="margin-top: 2px;">
+#{if req.ticketType == "own_tickets"}
+  <li><i>Ticket Type</i>: Use Own Tickets</li>
 #{/if}
+#{else}
+  #{if req.ticketType == "hop_new"}
+    <li><i>Ticket Type</i>: Purchase New Hop Card</li>
+  #{/if}
+  #{elseif req.ticketType == "hop_reload"}
+    <li><i>Ticket Type</i>: Reload Existing Hop Card</li>
 
-#{if req.ccName}
-  <li>Name on Credit Card: ${req.ccName}</li>
-#{/if}
+    #{if req.classpassId}
+      <li><i>Class Pass Hop Card #</i>: ${req.classpassId}</li>
+    #{/if}
+  #{/elseif}
 
-#{if req.classpassId}
-  <li>Credit Card Last Four Digits: ${req.ccLastFour}</li>
-#{/if}
+  #{if req.paymentPreference == "phone_cc" || req.paymentPreference == "fax_cc"}
+    <li><i>Payment Preference</i>: Credit Card</li>
+    <li><i>Credit Card Type</i>:
+      #{if req.ccType}
+        ${req.ccType}
+      #{/if}
+      #{else}
+        (Not specified)
+      #{/else}
+    </li>
 
-#{if req.checkNumber}
-  <li>Check / Money Order Number: ${req.checkNumber}</li>
-#{/if}
+    <li><i>Name on Credit Card</i>:
+      #{if req.ccName}
+        ${req.ccName}
+      #{/if}
+      #{else}
+        (Not specified)
+      #{/else}
+    </li>
+
+    <li><i>Credit Card Last Four Digits</i>:
+      #{if req.ccLastFour}
+        ${req.ccLastFour}
+      #{/if}
+      #{else}
+        (Not specified)
+      #{/else}
+    </li>
+  #{/if}
+  #{elseif req.paymentPreference == "mail_check"}
+    <li><i>Payment Preference</i>: Check/Money Order</li>
+
+    <li><i>Check / Money Order Number</i>:
+      #{if req.checkNumber}
+        ${req.checkNumber}
+      #{/if}
+      #{else}
+        (Not specified)
+      #{/else}
+    </li>
+  #{/elseif}
+#{/else}
+
 </ul>
 
 <table border="0" cellpadding="6px" cellspacing="0" style="width: 100%;">
 <tr style="background: #ccc;">
   <th style="width:60%; text-align: left;"></th>
   <th style="width:10%; text-align: left;">Quantity</th>
-  <th style="width:15%; text-align: left;">Unit Price</th> 
+  <th style="width:15%; text-align: left;">Unit Price</th>
   <th style="width:15%; text-align: left;">Total</th>
 </tr>
 
@@ -51,7 +91,7 @@
     #{/if}
     #{else}
       $3.30
-    #{/else}    
+    #{/else}
   </td>
   <td>
     #{if req.classpassId}
@@ -59,7 +99,7 @@
     #{/if}
     #{else}
       $${(req.numStudents*3.3).format("0.00")}
-    #{/else}    
+    #{/else}
   </td>
 </tr>
 #{/if}
@@ -74,7 +114,7 @@
     #{/if}
     #{else}
       $5.00
-    #{/else}    
+    #{/else}
   </td>
   <td>
     #{if req.classpassId}
@@ -82,7 +122,7 @@
     #{/if}
     #{else}
       $${(req.numChaperones*5).format("0.00")}
-    #{/else}    
+    #{/else}
   </td>
 </tr>
 #{/if}
@@ -99,11 +139,11 @@
     #{/if}
     #{else}
       $${(req.numStudents * 3.3 + req.numChaperones * 5).format("0.00")}
-    #{/else}       
-    
+    #{/else}
+
   </td>
 </tr>
 </table>
-  
+
 </p>
 </div>
