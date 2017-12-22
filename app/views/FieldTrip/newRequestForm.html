@@ -1,211 +1,307 @@
+<!-- spacing of the following includes is important -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
 #{stylesheet 'main.css' /}
+#{script 'jquery-1.8.2.js' /}
+
+
+#{stylesheet 'forms.css' /}
+#{stylesheet 'jquery-ui/jquery-ui-1.9.1.custom.css' /}
+#{script 'jquery-ui-1.9.1.custom.js' /}
+
 
 <!-- Header start -->
-<div class="standardheader">
+<div class="standardheader wide">
     <h1>Field Trip Request Form</h1>
-    <div class="first">
-        <p class="h1sub">
-            Complete and submit this form to request a field trip using TriMet buses or MAX light rail.
-            <ul>
-                <li>Requests must be received and paid for (if applicable) at least two weeks in advance.</li>
-                <li>Field Trips may only be scheduled on weekdays during off-peak hours (9 a.m. – 3 p.m. and after 6 p.m.)</li>
-                <li>Your group may use regular TriMet tickets or a discounted group fare (Class Pass).</li>
-                <ul>
-                    <li>A Class Pass allows your field trip to travel on TriMet for $1 per person for the duration of the field trip.</li>
-                    <ul>
-                        <li>Groups of 15 or more people (including students (7-18 or in high school), teachers, and chaperones) are eligible.</li>
-                        <li>Your Class Pass fare will be loaded onto a Hop card, which you'll tap when boarding the bus or entering a light rail platform. You can either request a new one or we can reload an existing Class Pass Hop card.</li>
-                    </ul>
-                </ul>
-                <li>Due to vehicle capacities, groups larger than 40 people per bus and 80 per MAX train will be split (and issued separate Class Passes if applicable). Smaller groups may also be split to manage capacities.</li>
-            </ul>
-            If you have any questions or need to modify your trip, please contact us at <a href="mailto:fieldtrips@trimet.org">fieldtrips@trimet.org</a> or give us a call at 503-962-2424, option 4.
-        </p>
-    </div>
 </div>
 <!-- Header end -->
 
-#{script 'jquery-1.8.2.js' /}
-#{script 'jquery-ui-1.9.1.custom.js' /}
-#{stylesheet 'jquery-ui/jquery-ui-1.9.1.custom.css' /}
 
 <div class="fullwidth">
     <div class="contentcontainer">
         <div class="row">
-            <div class="col-xs-12 col-sm-0 col-sm-offset-1 col-md-0 col-md-offset-1">
-                <form action="newRequest" id="requestForm" method="post">
+            <div class="col-xs-12">
 
-                    <h3>Contact Information</h3>
-
-                    <div class="otp-fieldTripRequest-row">
-                        Teacher Name: <input id="teacherName" name="req.teacherName" style="width: 250px;" />&nbsp;&nbsp;
-                        School Name: <input id="schoolName"  name="req.schoolName" style="width: 250px;"/>
-                    </div>
-
-                    <div class="otp-fieldTripRequest-row">
-                        Address: <input name="req.address" style="width: 250px;" />&nbsp;&nbsp;
-                        City: <input name="req.city" />&nbsp;&nbsp;
-                        State: <input name="req.state" style="width: 40px;" />&nbsp;&nbsp;
-                        Zip: <input name="req.zip" style="width: 60px;" />
-                    </div>
-
-
-                    <div class="otp-fieldTripRequest-row">
-                        Phone: <input name="req.phoneNumber" />&nbsp;&nbsp;
-                        Fax: <input name="req.faxNumber" />
-                    </div>
-
-                    <div class="otp-fieldTripRequest-row">
-                        Email Address: <input id="emailAddress" name="req.emailAddress" />&nbsp;&nbsp;
-                        Grade: <input name="req.grade" style="width: 40px;" />
-                    </div>
-
-
-                    <h3>Field Trip Information</h3>
-
-
-                    <div class="otp-fieldTripRequest-row">
-                        # of Students: <input id="numStudents" name="req.numStudents" style="width: 40px;" onChange="ridersChanged()" />&nbsp;&nbsp;&nbsp;
-                        Age Range: <input name="req.minimumAge" style="width: 30px;" /> to <input name="req.maximumAge" style="width: 30px;" />
-                    </div>
-
-                    <div class="otp-fieldTripRequest-row">
-                        # of Chaperones (including Teachers):
-                        <input id="numChaperones" name="req.numChaperones" style="width: 40px;" onChange="ridersChanged()" />
-                    </div>
-
-                    <div class="otp-fieldTripRequest-row">
-                        Total # of Riders: <span id="totalRiders"></span>
-                    </div>
-
-                    <div class="otp-fieldTripRequest-row">
-                        Starting Point (Address): <input id="startLocation" name="req.startLocation" style="width: 500px" />&nbsp;&nbsp;
-                    </div>
-
-                    <div class="otp-fieldTripRequest-row">
-                        Destination (Address): <input id="endLocation" name="req.endLocation" style="width: 500px" />
-                    </div>
-
-                    <!--
-                    <div class="otp-fieldTripRequest-row">
-                      Intermediate Point(s): <input id="startLocation" name="req.intermediateLocations" style="width: 600px;" />
-                    </div>
-                    -->
-
-
-
-                    <div class="otp-fieldTripRequest-row">
-                        Date of Trip: <input id="travelDate" name="req.travelDate" />
-                    </div>
-
-                    <div class="otp-fieldTripRequest-row">
-                        Time your group needs to be at your destination:
-                        <input id="arriveDestinationTime-hour" style="width: 20px; "/> : <input id="arriveDestinationTime-minute" style="width: 20px; "/>
-                        <select id="arriveDestinationTime-ampm">
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                        </select>
-                    </div>
-                    <input type="hidden" id="arriveDestinationTime" name="req.arriveDestinationTime" />
-
-
-                    <div class="otp-fieldTripRequest-row">
-                        Time your group will be ready to leave your destination:
-                        <input id="leaveDestinationTime-hour" style="width: 20px; "/> : <input id="leaveDestinationTime-minute" style="width: 20px; "/>
-                        <select id="leaveDestinationTime-ampm">
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                        </select>
-                    </div>
-                    <input type="hidden" id="leaveDestinationTime" name="req.leaveDestinationTime" />
-
-
-                    <div class="otp-fieldTripRequest-row">
-                        Time your group needs to be back at school:
-                        <input id="arriveSchoolTime-hour" style="width: 20px; "/> : <input id="arriveSchoolTime-minute" style="width: 20px; "/>
-                        <select id="arriveSchoolTime-ampm">
-                            <option value="AM">AM</option>
-                            <option value="PM">PM</option>
-                        </select>
-                    </div>
-                    <input type="hidden" id="arriveSchoolTime" name="req.arriveSchoolTime" />
-
-                    <div class="otp-fieldTripRequest-row" style="margin-top: 1em">
-                        Notes:<br>
-                        <textarea name="req.submitterNotes" style="width: 100%; height: 5em;"></textarea>
-                    </div>
-
-                    <h3>Payment Information</h3>
-                    <p>
-                        As noted above, you may use your own tickets or use a Class Pass. If you elect to order a new or
-                        reload an existing Class Pass Hop card, the total price will be $1 per person<span id="totalCost"></span>.
-                        You can pay by check, money order, or credit card. If you plan to pay with a credit card,
-                        please send your card information via fax or give us a call; do not email credit card information
-                        or enter it on this form.
-                    </p>
-
-                    <p>
-                        Please indicate what type of fare you will be using:
-                    </p>
-
-                    <input type="hidden" id="ticketType" name="req.ticketType" />
-                    <input type="hidden" id="paymentPreference" name="req.paymentPreference" />
-                    <input type="hidden" id="classpassId" name="req.classpassId" />
-
-                    <input name="paymentType" type="radio" value="own_tickets" onclick="paymentTypeChanged()" checked /> My own tickets<br>
-                    <input name="paymentType" type="radio" value="hop" onclick="paymentTypeChanged()" /> Class Pass Hop Card<br>
-
-                    <div id="classpassDetails" style="margin-left: 40px; display: none">
-                        <input name="hopType" type="radio" value="hop_new" onclick="hopTypeChanged()" checked /> Order New<br>
-                        <input name="hopType" type="radio" value="hop_reload" onclick="hopTypeChanged()" /> Reload Existing
-                        <span id="classpassIdBlock" style="margin-left: 12px; display: none;">
-                            <i>Please enter card #: </i>
-                            <input id="classpassIdInput" />
-                        </span>
-                        <br>
-
-                        <div style="margin-top: 10px; text-decoration: underline;">
-                            Class Pass Payment Preference:
-                        </div>
-                        <input name="hopPayPref" type="radio" value="phone_cc" /> Credit Card (I will pay by phone)<br>
-                        <input name="hopPayPref" type="radio" value="fax_cc" /> Credit Card (I will fax my card information)<br>
-                        <input name="hopPayPref" type="radio" value="mail_check" /> I will mail a check or money order<br>
-
-                        <div style="margin-top: 10px; text-decoration: underline;">
-                            <input type="checkbox" id="requireInvoice" name="req.requireInvoice" /> I need an invoice before paying
+                <div class="row">
+                    <div class="col-xs-12 col-md-9">
+                        <div class="box">
+                            <p>Complete and submit this form to request a field trip using TriMet buses or MAX light rail.</p>
+                            <ol>
+                                <li>Requests must be received and paid for (if applicable) at least two weeks in advance.</li>
+                                <li>Field Trips may only be scheduled on weekdays during off-peak hours (9 a.m. – 3 p.m. and after 6 p.m.)</li>
+                                <li>Your group may use regular TriMet tickets or a discounted group fare (Class Pass).</li>
+                                <ul>
+                                    <li>A Class Pass allows your field trip to travel on TriMet for $1 per person for the duration of the field trip.</li>
+                                    <ul>
+                                        <li>Groups of 15 or more people (including students (7-18 or in high school), teachers, and chaperones) are eligible.</li>
+                                        <li>Your Class Pass fare will be loaded onto a Hop card, which you'll tap when boarding the bus or entering a light rail platform. You can either request a new one or we can reload an existing Class Pass Hop card.</li>
+                                    </ul>
+                                </ul>
+                                <li>Due to vehicle capacities, groups larger than 40 people per bus and 80 per MAX train will be split (and issued separate Class Passes if applicable). Smaller groups may also be split to manage capacities.</li>
+                            </ol>
                         </div>
                     </div>
-
-                    <!--
-                    <input name="req.paymentPreference" type="radio" value="own_tickets" checked /> I will use my own tickets<br>
-
-                    <p>Class Pass payment preference:</p>
-                    <input name="req.paymentPreference" type="radio" value="request_call" /> Please call me at above phone number<br>
-                    <input name="req.paymentPreference" type="radio" value="fax_cc" /> I will fax credit card information to TriMet<br>
-                    <input name="req.paymentPreference" type="radio" value="mail_check" /> I will mail a check to TriMet
-
-                    <p><input type="checkbox" name="req.requireInvoice" /> I need an invoice before paying
-                    -->
-
-                    <h3>User Verification</h3>
-
-                    Please enter the following text:
-
-                    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                    <div class="g-recaptcha" data-sitekey="${play.configuration['recaptcha.public_key']}"></div>
-
-                </form>
-
-
-                <div style="text-align: center; font-weight: bold; margin-top: 2em;">Please verify that all information is correctly entered prior to submitting.</div>
-                <div class="buttonRow" style="text-align: center;">
-                    <button class="button" id="submitLink" style="cursor:pointer; width: 250px; padding: 3px; margin: 4px auto;">Submit Request</button>
+                    <div class="col-xs-12 col-md-3">
+                        <div class="box">
+                            <h4>Questions?</h4>
+                            <p>If you have any questions or need to modify your trip, please contact us at <a href="mailto:fieldtrips@trimet.org">fieldtrips@trimet.org</a> or give us a call at 503-962-2424, option 4.</p>
+                        </div>
+                    </div>
                 </div>
 
+                <p>&nbsp;</p>
+
+                <form action="newRequest" id="requestForm" method="post" class="fieldtrip">
+
+                    <h2>Contact Information</h2>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="teacherName">Teacher Name*</label>
+                                <input id="teacherName" name="req.teacherName" />
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="schoolName">School Name*</label>
+                                <input id="schoolName" name="req.schoolName" />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <fieldset>
+                                <label for="address">Address</label>
+                                <input name="req.address" id="address" class="address" />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <fieldset>
+                            <div class="col-xs-5">
+                                <label for="city">City</label>
+                                <input name="req.city" id="city" class="city" />
+                            </div>
+                            <div class="col-xs-4">
+                                <label for="state">State</label>
+                                <input name="req.state" id="state" class="state" />
+                            </div>
+                            <div class="col-xs-3">
+                                <label for="zip">Zip</label>
+                                <input name="req.zip" id="zip" class="zip" />
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="phoneNumber">Phone</label>
+                                <input name="req.phoneNumber" id="phoneNumber" />
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="faxNumber">Fax</label>
+                                <input name="req.faxNumber" id="faxNumber" />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="emailAddress">Email Address*</label>
+                                <input id="emailAddress" name="req.emailAddress" />
+                                <p class="small">Your personal information will be used in accordance with our <a href="//trimet.org/legal/privacy.htm">privacy policy</a>.</p>
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-3 col-md-2">
+                            <fieldset>
+                                <label for="grade">Grade</label>
+                                <input name="req.grade" id="grade" class="grade" />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <p>&nbsp;</p>
+
+                    <h2>Field Trip Information</h2>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-ms-6 col-sm-6 col-md-3">
+                            <fieldset class="numberbox">
+                                <label for="numStudents"># of Students*</label>
+                                <input id="numStudents" name="req.numStudents" onChange="ridersChanged()" />
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-ms-6 col-sm-6 col-md-3">
+                            <fieldset class="age">
+                                <label for="minimumAge">Age Range</label>
+                                <input name="req.minimumAge" id="minimumAge" /><span>to</span><input name="req.maximumAge" />
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-ms-12 col-sm-6 col-md-3">
+                            <fieldset class="numberbox">
+                                <label for="numChaperones"># of Chaperones</label>
+                                <input name="req.numChaperones" id="numChaperones" onChange="ridersChanged()" />
+                                <p class="small">Including teachers</p>
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-ms-12 col-sm-6 col-md-3">
+                            <fieldset class="numberbox">
+                                <label for="numChaperones">Total # of Riders</label>
+                                <input name="req.totalRiders" id="totalRiders" readonly disabled />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="startLocation">Starting Point (Address)*</label>
+                                <input id="startLocation" name="req.startLocation" />
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="endLocation">Destination (Address)*</label>
+                                <input id="endLocation" name="req.endLocation" />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            <fieldset>
+                                <label for="travelDate">Date of Trip*</label>
+                                <input id="travelDate" name="req.travelDate" />
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <h3>Getting There</h3>
+                            <fieldset class="times">
+                                <label for="arriveDestinationTime-hour">Time your group needs to be at your destination*</label>
+                                <input id="arriveDestinationTime-hour" /><span>:</span><input id="arriveDestinationTime-minute" />
+                                <select id="arriveDestinationTime-ampm">
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </fieldset>
+                            <input type="hidden" id="arriveDestinationTime" name="req.arriveDestinationTime" />
+                        </div>
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <h3>Getting Back</h3>
+                            <fieldset class="times">
+                                <label for="leaveDestinationTime-hour">Time your group will be ready to leave your destination*</label>
+                                <input id="leaveDestinationTime-hour" /><span>:</span><input id="leaveDestinationTime-minute" />
+                                <select id="leaveDestinationTime-ampm">
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </fieldset>
+                            <input type="hidden" id="leaveDestinationTime" name="req.leaveDestinationTime" />
+                        </div>
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <h3>&nbsp;</h3>
+                            <fieldset class="times">
+                                <label for="arriveSchoolTime-hour">Time your group needs to be back at school*</label>
+                                <input id="arriveSchoolTime-hour" /><span>:</span><input id="arriveSchoolTime-minute" />
+                                <select id="arriveSchoolTime-ampm">
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </fieldset>
+                            <input type="hidden" id="arriveSchoolTime" name="req.arriveSchoolTime" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <fieldset>
+                                <label for="submitterNotes">Notes</label>
+                                <textarea name="req.submitterNotes" rows="4" id="submitterNotes"></textarea>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <p>&nbsp;</p>
+
+                    <h2>Payment Information</h2>
+
+                    <div class="box">
+                        <p>
+                            As noted above, you may use your own tickets or use a Class Pass. If you elect to order a new or
+                            reload an existing Class Pass Hop card, the total price will be $1 per person<span id="totalCost"></span>.
+                            You can pay by check, money order, or credit card. If you plan to pay with a credit card,
+                            please send your card information via fax or give us a call; do not email credit card information
+                            or enter it on this form.
+                        </p>
+                        <p>
+                            Please indicate what type of fare you will be using:
+                        </p>
+
+                        <fieldset>
+                            <input type="hidden" id="ticketType" name="req.ticketType" />
+                            <input type="hidden" id="paymentPreference" name="req.paymentPreference" />
+                            <input type="hidden" id="classpassId" name="req.classpassId" />
+                            <label for="own_tickets">
+                                <h4><input type="radio" name="paymentType" value="own_tickets" id="own_tickets" onclick="paymentTypeChanged()" checked /> My own tickets</h4>
+                            </label>
+                            <label for="hop">
+                                <h4><input type="radio" name="paymentType" value="hop" id="hop" onclick="paymentTypeChanged()" /> Class Pass Hop Card</h4>
+                            </label>
+
+                            <div id="classpassDetails" style="margin-left:40px; display:none">
+                                <label for="hop_new">
+                                    <input type="radio" name="hopType" value="hop_new" id="hop_new" onclick="hopTypeChanged()" checked /> Order New
+                                </label>
+                                <label for="hop_reload">
+                                    <input type="radio" name="hopType" value="hop_reload" id="hop_reload" onclick="hopTypeChanged()" /> Reload Existing
+                                </label>
+                                <div id="classpassIdBlock" style="display:none; margin-left: 20px;">
+                                    <label for="classpassIdInput">Please enter card #: </label>
+                                    <input id="classpassIdInput" />
+                                </div>
+
+                                <h3>Class Pass Payment Preference:</h3>
+                                <label for="phone_cc">
+                                    <input type="radio" name="hopPayPref" value="phone_cc" id="phone_cc" /> Credit Card (I will pay by phone)
+                                </label>
+                                <label for="fax_cc">
+                                    <input type="radio" name="hopPayPref" value="fax_cc" id="fax_cc" /> Credit Card (I will fax my card information)
+                                </label>
+                                <label for="mail_check">
+                                    <input type="radio" name="hopPayPref" value="mail_check" id="mail_check" /> I will mail a check or money order
+                                </label>
+                                <label for="requireInvoice" style="margin-top:1em;">
+                                    <input type="checkbox" id="requireInvoice" name="req.requireInvoice" /> I need an invoice before paying
+                                </label>
+                            </div>
+                        </fieldset>
+
+                    </div> <!-- "box" -->
+
+                    <p>&nbsp;</p>
+
+                    <h3 class="hcenter">Please verify that all information is correctly entered prior to submitting.</h3>
+                    <div style="width:300px; display: block; margin: 0 auto;">
+                        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                        <div class="g-recaptcha" data-sitekey="${play.configuration['recaptcha.public_key']}"></div>
+                    </div>
+                </form>
+                <p>&nbsp;</p>
+                <p class="hcenter"><button class="submit" id="submitLink">Submit Request</button></p>
             </div>
         </div> <!-- end row -->
     </div>
 </div>
+
 
 <!-- initialization of interactive fields -->
 <script type="text/javascript" language="javascript">
@@ -324,7 +420,7 @@ function ridersChanged() {
 
     var totalRiders = numStudents + numChaperones;
     console.log(totalRiders)
-    $("#totalRiders").html(totalRiders)
+    $("#totalRiders").val(totalRiders)
     $("#totalCost").html(" <b>or $" + totalRiders + ".00 for this trip</b>")
 }
 

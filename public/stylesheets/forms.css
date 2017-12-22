@@ -1,0 +1,181 @@
+.content li {
+    line-height: 1.1 !important;
+    padding-bottom: 0.3em !important;
+}
+
+input#totalRiders {
+    background: white;
+}
+
+.content form.fieldtrip fieldset {
+    border: 0;
+    padding: 0 0 1em 0;
+    margin: 0;
+    display: block;
+}
+    .content form.fieldtrip fieldset.float {
+        display: inline-block;
+        padding-right: 1em;
+    }
+    .content form.fieldtrip fieldset label {
+        display: block;
+        font-size: 1.125em;
+        line-height: 1.2;
+        margin: 0 0 5px 0;
+        padding: 0;
+        color: #666;
+        cursor: pointer;
+    }
+    .content form.fieldtrip fieldset label.hide {
+        display: none;
+    }
+.content form.fieldtrip input, .content form.fieldtrip select, .content form.fieldtrip textarea {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 7px 10px;
+    border: 3px solid #ccc;
+    font-size: 14px;
+    margin-bottom: 15px;
+    width: 100%;
+    /*-webkit-appearance: none;    removes default safari formatting */
+}
+    .content form.fieldtrip input[type=radio], .content form.fieldtrip input[type=checkbox] {
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        padding: 7px 10px;
+        border: none;
+        width: auto;
+       /* -webkit-appearance: none;    removes default safari formatting */
+    }
+        .content form.fieldtrip input.invoice {
+            margin-top: .75em;
+        }
+
+
+    .content form.fieldtrip select {
+        cursor: pointer;
+/*
+         background: url("/global/img/select-arrow.png") right 18px no-repeat #fff;
+        background-size: auto 8px;
+*/
+    }
+        .content form .input-select-icon {  /* for dropdown arrow */
+/*            margin-top: -10px;*/
+        }
+    .content form.fieldtrip input:focus, .content form.fieldtrip select:focus {
+        border: 3px solid #f7e975;
+    }
+
+    .content form.fieldtrip fieldset.numberbox input,
+    .content form.fieldtrip fieldset.age input{
+        width: 60px;
+        margin-right: 8px;
+    }
+    .content form.fieldtrip fieldset.age span {
+        padding-right: 8px;
+    }
+
+
+    .content form.fieldtrip fieldset.times input {
+        width: 60px;
+        margin-right: 8px;
+    }
+    .content form.fieldtrip fieldset.times select {
+        width: 80px;
+    }
+        .content form.fieldtrip fieldset.times span {
+            margin-right: 8px;
+        }
+
+
+
+@media only screen and (min-width: 768px) { /* sm screens and up */
+    .content form.fieldtrip fieldset label {
+        font-size: 1.25em;
+/*        padding-left: 18px;*/
+    }
+    .content form.fieldtrip input, .content form.fieldtrip select {
+        padding: 10px;
+        font-size: 19px;
+    }
+}
+
+
+
+
+
+    /***** SUBMIT BUTTON *****/
+    .content button.submit {
+        font-weight: 500;
+        display: inline-block;
+        color: #fff;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        vertical-align: top;
+        background-color: #62a038;
+        border: 2px solid #62a038;
+        cursor: pointer;
+        width: auto;
+        padding: .5em 1em .5em;
+        font-size: 125%;
+        border-radius: 5px;
+    }
+        .content button.submit:hover {
+            background-color: #568d32;
+            border-color: #568d32;
+        }
+
+
+    /***** OR BAR *****/
+    .content .or {
+        width: 75%;
+        margin: 2em auto;
+    }
+        .content .or-bar {
+            height: 1px;
+            background-color: #000;
+            margin-bottom: 1em;
+        }
+        .content .or-text {
+            background-color: #fff;
+            padding: 10px;
+            width: 40px;
+            margin: -37px auto 0;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+
+    /***** TRIP PLANNER DATE/TIME FIELDS *****/
+    .content form.fieldtrip fieldset.departwhen-units select {
+        width: 80px;
+        margin-right: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+        .content form.fieldtrip fieldset.departwhen-units select#Hour, .content form.fieldtrip fieldset.departwhen-units b {
+            margin-right: 8px;
+        }
+        .content form.fieldtrip fieldset.departwhen-units select#Month {
+            width: 90px;
+        }
+        .content form.fieldtrip #departwhen-date b {
+             font-family: Hind, Helvetica, Arial, sans-serif;
+             font-size: 125%;
+        }
+    @media only screen and (min-width: 992px) { /* md screens and up */
+        .content form.fieldtrip fieldset.departwhen-units select {
+            margin-right: 5px;
+            padding-left: 15px;
+            padding-right: 15px;
+       }
+   }
+    @media only screen and (min-width: 1200px) { /* lg screens and up */
+         .content form.fieldtrip fieldset.departwhen-units select {
+            width: 90px;
+       }
+   }
+
