@@ -115,7 +115,6 @@
                             <fieldset>
                                 <label for="emailAddress">Email Address*</label>
                                 <input id="emailAddress" name="req.emailAddress" />
-                                <p class="small">Your personal information will be used in accordance with our <a href="//trimet.org/legal/privacy.htm">privacy policy</a>.</p>
                             </fieldset>
                         </div>
                         <div class="col-xs-3 col-md-2">
@@ -259,7 +258,7 @@
 
                             <div id="classpassDetails" style="margin-left:40px; display:none">
                                 <label for="hop_new">
-                                    <input type="radio" name="hopType" value="hop_new" id="hop_new" onclick="hopTypeChanged()" checked /> Order New
+                                    <input type="radio" name="hopType" value="hop_new" id="hop_new" onclick="hopTypeChanged()" /> Order New
                                 </label>
                                 <label for="hop_reload">
                                     <input type="radio" name="hopType" value="hop_reload" id="hop_reload" onclick="hopTypeChanged()" /> Reload Existing
@@ -355,9 +354,15 @@ function submitClicked() {
     if (classpassId) classpassId = classpassId.trim();
 
     // confirm valid payment inputs
-    if(ticketType !== 'own_tickets' && !hopPayPref) {
-      alert("Please specify a payment preference if paying via Hop Card");
-      return
+    if(ticketType !== 'own_tickets') {
+        if(!hopType) {
+          alert("Please tell us if you need to order a new Hop Card, or if want to enter your existing Hop Card 16-digit number");
+          return
+        }
+        else if(!hopPayPref) {
+          alert("Please specify a payment preference if paying via Hop Card");
+          return
+        }
     }
     if(requireInvoice && !hopPayPref) {
       alert("Please specify a payment preference if invoice is required");
