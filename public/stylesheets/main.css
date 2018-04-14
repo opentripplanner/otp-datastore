@@ -37,3 +37,13 @@ h3 {
     padding: 6px;
     background: #eee;
 }
+
+label {
+    display: inline-block;
+    width: 100%;
+}
+input {
+    display: inline-block;
+    min-width: 10%;
+}
+.hcenter { text-align: center; }
