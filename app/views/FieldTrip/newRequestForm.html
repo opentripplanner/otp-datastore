@@ -4,6 +4,8 @@
 #{script 'jquery-1.8.2.js' /}
 
 
+
+#{script 'moment.js' /}
 #{stylesheet 'forms.css' /}
 #{stylesheet 'jquery-ui/jquery-ui-1.9.1.custom.css' /}
 #{script 'jquery-ui-1.9.1.custom.js' /}
@@ -303,8 +305,10 @@
 
 <!-- initialization of interactive fields -->
 <script type="text/javascript" language="javascript">
+var advanceDays = 14
+
 $(document).ready(function() {
-    $("#travelDate").datepicker();
+    $("#travelDate").datepicker({ minDate: '+' + advanceDays });
     $("#submitLink").click(function() {
         submitClicked();
     });
@@ -318,7 +322,17 @@ function submitClicked() {
     if(!checkRequired('numStudents', 'Number of Students')) return;
     if(!checkRequired('startLocation', 'Start Location Address')) return;
     if(!checkRequired('endLocation', 'End Location Address')) return;
-    if(!checkRequired('travelDate', 'Date of Travel')) return;
+
+    // process date
+    var travelDate = $("#travelDate").val()
+    if (
+      !travelDate ||
+      travelDate === '' ||
+      moment(travelDate, 'MM/DD/YYYY').diff(moment(), 'days') < (advanceDays - 1)
+    ) {
+      alert('Travel date must be at least ' + advanceDays + ' days in the future')
+      return
+    }
 
     // process time inputs
     var arriveDestinationTime = constructTime("arriveDestinationTime");
