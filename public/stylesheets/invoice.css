@@ -1,0 +1,79 @@
+.invoice {
+  font-family: sans-serif;
+  font-size: 16px;
+  max-width: 800px;
+  margin: 40px auto;
+  line-height: 22px;
+}
+
+.invoice .trimet-logo {
+  width: 180px;
+}
+
+.invoice .current-date {
+  margin-top: 12px;
+}
+
+.invoice .column {
+  float: left;
+  width: 33.33%;
+}
+
+.invoice .title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.invoice .expedite {
+  margin-top: 12px;
+  font-style: italic;
+}
+
+.invoice .row2 {
+  margin-top: 40px;
+}
+
+.invoice .sold-column {
+  float: left;
+  width: 60%;
+}
+
+.invoice .date-column {
+  float: left;
+  width: 40%;
+}
+
+.invoice .header-box {
+  text-align: center;
+}
+
+.invoice .address-box {
+  text-align: right;
+}
+
+.invoice table {
+  width: 100%;
+  table-layout: fixed;
+  margin-top: 30px;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+
+.invoice th, .invoice td {
+  border: 1px solid black;
+  text-align: left;
+  padding: 8px;
+}
+
+.invoice th {
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}
+
+.invoice td {
+  vertical-align: top;
+}
+
+.invoice .footer {
+  margin-top: 30px;
+}
