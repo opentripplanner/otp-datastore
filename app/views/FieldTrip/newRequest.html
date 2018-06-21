@@ -141,27 +141,25 @@
 <!-- Invoice javascript -->
 <script type="text/javascript" language="javascript">
   function showInvoice () {
-      console.log('invoice');
+    var source = document.getElementById("invoice-template").innerHTML;
+    var template = Handlebars.compile(source);
 
-      var source = document.getElementById("invoice-template").innerHTML;
-      var template = Handlebars.compile(source);
+    var html = "<html>";
+    html += '<link rel="stylesheet" type="text/css" href="/public/stylesheets/invoice.css" charset="utf-8" ></link>';
+    html += template({
+      currentDate: moment().format('MMMM D, YYYY'),
+      travelDate: moment('${req.travelDate}').format('MMMM D, YYYY'),
+      teacherName: '${req.teacherName}',
+      schoolName: '${req.schoolName}',
+      address: '${req.address}',
+      city: '${req.city}',
+      state: '${req.state}',
+      zip: '${req.zip}',
+      totalRiders: (parseInt(${req.numStudents}) || 0) + (parseInt(${req.numChaperones}) || 0)
+    });
+    html += "</html>";
 
-      var html = "<html>";
-      html += '<link rel="stylesheet" type="text/css" href="/public/stylesheets/invoice.css" charset="utf-8" ></link>';
-      html += template({
-        currentDate: moment().format('MMMM Do, YYYY'),
-        travelDate: moment('${req.travelDate}').format('MMMM Do, YYYY'),
-        teacherName: '${req.teacherName}',
-        schoolName: '${req.schoolName}',
-        address: '${req.address}',
-        city: '${req.city}',
-        state: '${req.state}',
-        zip: '${req.zip}',
-        totalRiders: (parseInt(${req.numStudents}) || 0) + (parseInt(${req.numChaperones}) || 0)
-      });
-      html += "</html>";
-
-      var newWindow = window.open();
-      newWindow.document.write(html);
+    var newWindow = window.open();
+    newWindow.document.write(html);
   }
 </script>
