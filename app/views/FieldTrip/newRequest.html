@@ -1,5 +1,7 @@
 #{stylesheet 'main.css' /}
 
+#{script 'handlebars-v4.0.11.js' /}
+#{script 'moment.js' /}
 
 <div class="standardheader">
 <!-- InstanceBeginEditable name="Header" -->
@@ -29,11 +31,14 @@
                              <p><b>TriMet Field Trip Program</b><br/>
                                 701 SW 6th Ave.<br/>
                                 Portland, OR 97204<br/>
-                                FAX: 503-962-2482<br/>
+                                Fax: 503-962-2482<br/>
                                 Payment phone #: 503-962-2383</p>
                         </div>
                         <div class="col-xs-12 col-sm-6">
-                            <a href="http://fieldtrip.trimet.org">Fill out a <b>new</b> Field Trip Request.</a>
+                            <p><a href="#" onclick="showInvoice();return false;">View a <b>printable invoice</b> for this request.<a></p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <p><a href="http://fieldtrip.trimet.org">Fill out a <b>new</b> Field Trip Request.</a></p>
                         </div>
                     </div>
                 </div>
@@ -71,3 +76,89 @@
 </div><!-- .fullwidth -->
 <div class="share-wrap"></div>
 
+<!-- Invoice template -->
+<script id="invoice-template" type="text/x-handlebars-template">
+  <div class="invoice">
+    <div>
+      <div class="column">
+        <img src="/public/images/trimet_logo.png" class="trimet-logo" />
+        <div class='current-date'>Date: {{currentDate}}</div>
+      </div>
+      <div class="column header-box">
+        <div class="title">BILLING INVOICE</div>
+        <div class="expedite">Please expedite</div>
+      </div>
+      <div class="column address-box">
+        Field Trips Program<br />
+        701 SW 6th Ave, Suite 196<br />
+        Portland, OR 97204<br />
+      </div>
+      <br style="clear: left;" />
+    </div>
+
+    <div class="row2">
+      <div class="sold-column">
+        SOLD TO:<br />
+        {{schoolName}}<br />
+        {{teacherName}}<br />
+        {{address}}<br />
+        {{city}}, {{state}} {{zip}}
+      </div>
+      <div class="date-column">
+        Date of Travel: {{travelDate}}<br />
+        &nbsp;<br />
+        TERMS: Discount
+      </div>
+      <br style="clear: left;" />
+    </div>
+
+    <table>
+      <tr>
+        <th>Item</th>
+        <th>Description</th>
+        <th>Price per Rider</th>
+        <th>Number of Riders</th>
+        <th>Shipping / Processing Fee</th>
+        <th>Total Amount Due</th>
+      </tr>
+        <td>Field Trip / Class Pass</td>
+        <td>Special Price Fare</td>
+        <td>$1.00</td>
+        <td>{{totalRiders}}</td>
+        <td>$0.00</td>
+        <td><span>$</span>{{totalRiders}}.00</td>
+      <tr>
+      </tr>
+    </table>
+    <div class="footer">
+      <b>Requests and rescheduled trips must be received and paid for at least two weeks in advance.</b>
+      Unfortunately, we are unable to make exceptions due to workload.  Please allow extra time if paying via check in order to ensure it is received two weeks prior to the trip.  Late payments will be returned.
+    </div>
+  </div>
+</script>
+
+<!-- Invoice javascript -->
+<script type="text/javascript" language="javascript">
+  function showInvoice () {
+    var source = document.getElementById("invoice-template").innerHTML;
+    var template = Handlebars.compile(source);
+
+    var html = "<html>";
+    html += '<link rel="stylesheet" type="text/css" href="/public/stylesheets/invoice.css" charset="utf-8" ></link>';
+    html += template({
+      currentDate: moment().format('MMMM D, YYYY'),
+      travelDate: moment('${req.travelDate}').format('MMMM D, YYYY'),
+      teacherName: '${req.teacherName}',
+      schoolName: '${req.schoolName}',
+      address: '${req.address}',
+      city: '${req.city}',
+      state: '${req.state}',
+      zip: '${req.zip}',
+      totalRiders: (parseInt(${req.numStudents}) || 0) + (parseInt(${req.numChaperones}) || 0)
+    });
+    html += "</html>";
+
+    var newWindow = window.open();
+    newWindow.document.write(html);
+  }
+</script>
