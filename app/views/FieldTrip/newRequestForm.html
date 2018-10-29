@@ -271,7 +271,7 @@
 
                                 <h3>Class Pass Payment Preference:&nbsp;*&nbsp;</h3>
                                 <label for="phone_cc">
-                                    <input type="radio" name="hopPayPref" value="phone_cc" id="phone_cc" /> Credit Card (I will pay by phone)
+                                    <input type="radio" name="hopPayPref" value="phone_cc" id="phone_cc" /> Credit Card (I will call and pay over the phone)
                                 </label>
                                 <label for="fax_cc">
                                     <input type="radio" name="hopPayPref" value="fax_cc" id="fax_cc" /> Credit Card (I will fax my card information)
@@ -280,7 +280,7 @@
                                     <input type="radio" name="hopPayPref" value="mail_check" id="mail_check" /> I will mail a check or money order
                                 </label>
                                 <label for="requireInvoice" style="margin-top:1em;">
-                                    <input type="checkbox" id="requireInvoice" name="req.requireInvoice" /> I need an invoice before paying
+                                    <input type="checkbox" id="requireInvoice" name="req.requireInvoice" onclick="$('.invoiceDiv').removeClass('hidden');" /> I need an invoice before paying <div class="invoiceDiv hidden"><b>After submitting your request, please click the printable invoice link to view and print invoice.</b></div>
                                 </label>
                             </div>
                         </fieldset>
