@@ -14,29 +14,11 @@ import play.db.jpa.*;
 @Entity
 public class ScheduledFieldTrip extends GenericModel {
  
-    //@Expose
-    ////public long idCopy
-            
     @Id
     @GeneratedValue
     @Expose
     public Long id;
-    
-    /*
-    //@Column(nullable=false)
-    @OneToOne
-    public FieldTripRequest outboundRequest;
 
-    //@Column(nullable=false)
-    @OneToOne
-    public FieldTripRequest inboundRequest;
-    
-    public FieldTripRequest getRequest() {
-        if(outboundRequest != null) return outboundRequest;
-        if(inboundRequest != null) return inboundRequest;
-        return null;
-    }*/
-    
     @ManyToOne(optional=false)
     public FieldTripRequest request;
     
@@ -65,9 +47,9 @@ public class ScheduledFieldTrip extends GenericModel {
     }
 
     /** When the trip is scheduled to depart, which is not 
-        necessarily the time that any of the users actually depart.
-        This is in local time.
-    */
+     *  necessarily the time that any of the users actually depart.
+     *  This is in local time.
+     */
     @Temporal(TemporalType.TIME)
     @Column(nullable=false)
     @As("yyyy-MM-dd'T'HH:mm:ss")
@@ -75,38 +57,21 @@ public class ScheduledFieldTrip extends GenericModel {
     public Date departure;
 
     /** Service day for the trip (service days are defined in local time, and it
-        is assumed that all trips for a given field trip happen on the same service day) */
+     *  is assumed that all trips for a given field trip happen on the same service day)
+     */
     @Temporal(TemporalType.DATE)
     @Column(nullable=false)
     @Expose
     public Date serviceDay;
 
     /**
-       The origin/destination of the trip in OTP format (lat,lon::name)
+     *  The origin/destination of the trip in OTP format (lat,lon::name)
      */
     @Expose
     public String origin, destination;
 
-    /** A description of the trip ("Morx Elementary school 3rd grade trip to zoo") 
-     */
-    //@Expose
-    //public String description;
-
-
-    /** The name of the school.
-     */
-    //public String school;
-
-    /** The name of the teacher leading the trip.
-     */
-    //public String teacher;
-
-    //@Column(nullable=false)
-    //@Expose
-    //public boolean mailed = false;
-
     /** The number of passengers on the trip.  A trip is not complete
-        unless passengers == sum(passengers) over all group itineraries
+     *  unless passengers == sum(passengers) over all group itineraries
      */
     @Expose
     public int passengers;
@@ -129,26 +94,6 @@ public class ScheduledFieldTrip extends GenericModel {
     }
 
 
-    public ScheduledFieldTrip() { /*String createdBy, Date departure, String origin, String destination, 
-                     String description, int passengers) {*/
-        /*
-        this.createdBy = createdBy;
-        //fixme: not quite sure that this is safe
-        this.departure = departure;
-        this.serviceDay = departure;
-        this.origin = origin;
-        this.destination = destination;
-        //this.description = description;
-        this.passengers = passengers;*/
+    public ScheduledFieldTrip() {
     }
-
-    /*public String toString() {
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(departure);
-        String timeString = String.format("%d:%02d %s", calendar.get(Calendar.HOUR),
-                                          calendar.get(Calendar.MINUTE),
-                                          (calendar.get(Calendar.AM_PM) == 0 ? "AM" : "PM"));
-        String scheduled = isScheduled() ? "scheduled" : "unscheduled";
-        return timeString + " (" + passengers + " passengers) " + scheduled;
-    }*/
 }

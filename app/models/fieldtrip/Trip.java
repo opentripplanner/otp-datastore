@@ -9,7 +9,7 @@ import play.db.jpa.*;
 /**
 A GTFS trip.  These should be lazily populated, since we don't want to
 unnecessarily duplicate data from OTP.  Be sure to use createInstance.
-
+TODO: can this be deleted?
 */
 @Entity
 @Table(

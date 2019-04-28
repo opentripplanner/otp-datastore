@@ -6,6 +6,7 @@ import play.db.jpa.Model;
  
 /**
 A stop on a trip for a group
+ TODO: can this be deleted?
  */
 @Entity
 public class GroupTripStop extends Model {

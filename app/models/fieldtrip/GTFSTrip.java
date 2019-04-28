@@ -13,7 +13,8 @@ import play.db.jpa.Model;
 
 @Entity
 public class GTFSTrip extends Model {
- 
+
+    // The GroupItinerary that this trip belongs to
     @ManyToOne(optional=false)
     public GroupItinerary groupItinerary;
 
@@ -26,7 +27,12 @@ public class GTFSTrip extends Model {
     @Expose
     @As("HH:mm:ss")
     public Date arrive;
-    
+
+    /* The hashed-based identifier for this trip */
+    @Expose
+    public String tripHash;
+
+    // TODO: Do we still need this now that we use hashes?
     @Expose
     public String agencyAndId;
 
@@ -53,26 +59,4 @@ public class GTFSTrip extends Model {
 
     @Expose
     public Integer capacity;
-
-    @Expose
-    public String tripHash;
-
-    /*@ManyToOne
-    @Expose
-    private Trip trip;*/
-
-    //@Column
-    /** GTFS trips are stored in the system only once each */
-    /*public void setTrip(Trip trip) {
-        this.trip = trip.createInstance();
-    }*/
-
-    /** */
-    //@OneToMany(mappedBy="groupTrip", cascade=CascadeType.ALL)
-    /*@OneToMany(cascade=CascadeType.ALL)
-    @Expose
-    public List<GroupTripStop> stops;*/
-    
-    /*@Expose
-    public List<Integer> stops;*/
 }
