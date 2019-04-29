@@ -24,8 +24,18 @@
   <div class="tripBody">
     <b>Date</b>: ${month}/${day}/${year}<br>
     <b>Number of Passengers</b>: ${gtfsTrip.groupItinerary.passengers}<br>
-    <b>Ages</b>: ${gtfsTrip.groupItinerary.fieldTrip.request.minimumAge} to ${gtfsTrip.groupItinerary.fieldTrip.request.maximumAge}<br>
-    <b>Class Pass</b>: 
+    <b>Ages</b>:
+      #{if gtfsTrip.groupItinerary.fieldTrip.request.numStudents > 0 && !gtfsTrip.groupItinerary.fieldTrip.request.numFreeStudents}
+        <span>7-17 (or in high school)</span>
+      #{/if}
+      #{if gtfsTrip.groupItinerary.fieldTrip.request.numStudents > 0 && gtfsTrip.groupItinerary.fieldTrip.request.numFreeStudents == gtfsTrip.groupItinerary.fieldTrip.request.numStudents}
+        <span>6 and under</span>
+      #{/if}
+      #{if gtfsTrip.groupItinerary.fieldTrip.request.numFreeStudents > 0 && gtfsTrip.groupItinerary.fieldTrip.request.numStudents > gtfsTrip.groupItinerary.fieldTrip.request.numFreeStudents}
+        <span>Up to 18 (or in high school)</span>
+      #{/if}
+      <br>
+    <b>Class Pass</b>:
       #{if gtfsTrip.groupItinerary.fieldTrip.request.classpassId}
         ${gtfsTrip.groupItinerary.fieldTrip.request.classpassId}
       #{/if}

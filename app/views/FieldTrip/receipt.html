@@ -81,10 +81,10 @@
   <th style="width:15%; text-align: left;">Total</th>
 </tr>
 
-#{if req.numStudents > 0}
+#{if req.numStudents > 0 && req.numFreeStudents > 0}
 <tr>
-  <td>Youth Round Trip Passes</td>
-  <td>${req.numStudents}</td>
+  <td>Youth Round Trip Passes (7 and Over)</td>
+  <td>${req.numStudents - req.numFreeStudents}</td>
   <td>
     #{if req.classpassId}
       $1.00
@@ -95,11 +95,49 @@
   </td>
   <td>
     #{if req.classpassId}
-      $${(req.numStudents).format("0.00")}
+      $${(req.numStudents - req.numFreeStudents).format("0.00")}
     #{/if}
     #{else}
-      $${(req.numStudents*3.3).format("0.00")}
+      $${((req.numStudents - req.numFreeStudents)*3.3).format("0.00")}
     #{/else}
+  </td>
+</tr>
+#{/if}
+#{else}
+  #{if req.numStudents > 0}
+  <tr>
+    <td>Youth Round Trip Passes (7 and Over)</td>
+    <td>${req.numStudents}</td>
+    <td>
+      #{if req.classpassId}
+        $1.00
+      #{/if}
+      #{else}
+        $3.30
+      #{/else}
+    </td>
+    <td>
+      #{if req.classpassId}
+        $${req.numStudents.format("0.00")}
+      #{/if}
+      #{else}
+        $${(req.numStudents*3.3).format("0.00")}
+      #{/else}
+    </td>
+  </tr>
+  #{/if}
+#{/else}
+
+
+#{if req.numFreeStudents > 0}
+<tr>
+  <td>Youth 6 and Under</td>
+  <td>${req.numFreeStudents}</td>
+  <td>
+    $0.00
+  </td>
+  <td>
+    $0.00
   </td>
 </tr>
 #{/if}

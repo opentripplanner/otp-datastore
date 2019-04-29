@@ -67,6 +67,9 @@ public class FieldTripRequest extends GenericModel  {
     public Integer numStudents;
 
     @Expose
+    public Integer numFreeStudents;
+
+    @Expose
     public Integer numChaperones;
 
     @Expose
