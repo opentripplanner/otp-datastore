@@ -173,10 +173,10 @@
   <td style="border-top: 2px solid #ccc;">&nbsp;</td>
   <td style="border-top: 2px solid #ccc;">
     #{if req.classpassId}
-      $${(req.numStudents + req.numChaperones).format("0.00")}
+      $${(req.numStudents - req.numFreeStudents + req.numChaperones).format("0.00")}
     #{/if}
     #{else}
-      $${(req.numStudents * 3.3 + req.numChaperones * 5).format("0.00")}
+      $${((req.numStudents - req.numFreeStudents) * 3.3 + req.numChaperones * 5).format("0.00")}
     #{/else}
 
   </td>
