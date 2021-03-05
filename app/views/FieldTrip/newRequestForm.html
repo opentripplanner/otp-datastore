@@ -134,14 +134,15 @@
                     <div class="row">
                         <div class="col-xs-12 col-ms-6 col-sm-6 col-md-3">
                             <fieldset class="numberbox">
-                                <label for="numStudents"># of Students*</label>
-                                <input id="numStudents" name="req.numStudents" onChange="ridersChanged()" />
+                                <label for="numPaidStudents"># of Students 7 and Over *</label>
+                                <input id="numPaidStudents" onChange="ridersChanged()" />
+                                <input type="hidden" id="numStudents" name="req.numStudents" />
                             </fieldset>
                         </div>
                         <div class="col-xs-12 col-ms-6 col-sm-6 col-md-3">
-                            <fieldset class="age">
-                                <label for="minimumAge">Age Range</label>
-                                <input name="req.minimumAge" id="minimumAge" /><span>to</span><input name="req.maximumAge" />
+                            <fieldset class="numberbox">
+                                <label for="numFreeStudents"># of Students 6 and Under*</label>
+                                <input id="numFreeStudents" onChange="ridersChanged()" name="req.numFreeStudents" />
                             </fieldset>
                         </div>
                         <div class="col-xs-12 col-ms-12 col-sm-6 col-md-3">
@@ -319,7 +320,8 @@ function submitClicked() {
     // check for required fields
     if(!checkRequired('teacherName', 'Teacher Name')) return;
     if(!checkRequired('schoolName', 'School Name')) return;
-    if(!checkRequired('numStudents', 'Number of Students')) return;
+    if(!checkRequired('numPaidStudents', 'Number of Students 7 and Over')) return;
+    if(!checkRequired('numFreeStudents', 'Number of Students 6 and Under')) return;
     if(!checkRequired('startLocation', 'Start Location Address')) return;
     if(!checkRequired('endLocation', 'End Location Address')) return;
 
@@ -348,7 +350,6 @@ function submitClicked() {
         return;
     }
     $("#leaveDestinationTime").val(leaveDestinationTime);
-
 
     var arriveSchoolTime = constructTime("arriveSchoolTime");
     if(arriveSchoolTime == null) {
@@ -385,6 +386,13 @@ function submitClicked() {
       alert("Please enter a valid 16-digit Hop Card number");
       return
     }
+
+    // set group size by totaling free and paid students
+    var numPaidStudents = parseInt($("#numPaidStudents").val());
+    numPaidStudents = isNaN(numPaidStudents) ? 0 : numPaidStudents
+    var numFreeStudents = parseInt($("#numFreeStudents").val());
+    numFreeStudents = isNaN(numFreeStudents) ? 0 : numFreeStudents
+    $("#numStudents").val(numPaidStudents + numFreeStudents);
 
     // set payment-related hidden field values
     $("#ticketType").val(ticketType);
@@ -430,16 +438,19 @@ function constructTime(prefix) {
 }
 
 function ridersChanged() {
-    var numStudents = parseInt($("#numStudents").val());
-    numStudents = isNaN(numStudents) ? 0 : numStudents
+    var numPaidStudents = parseInt($("#numPaidStudents").val());
+    numPaidStudents = isNaN(numPaidStudents) ? 0 : numPaidStudents
+
+    var numFreeStudents = parseInt($("#numFreeStudents").val());
+    numFreeStudents = isNaN(numFreeStudents) ? 0 : numFreeStudents
 
     var numChaperones = parseInt($("#numChaperones").val());
     numChaperones = isNaN(numChaperones) ? 0 : numChaperones
 
-    var totalRiders = numStudents + numChaperones;
+    var totalRiders = numPaidStudents + numFreeStudents + numChaperones
     console.log(totalRiders)
     $("#totalRiders").val(totalRiders)
-    $("#totalCost").html(" <b>or $" + totalRiders + ".00 for this trip</b>")
+    $("#totalCost").html(" <b>or $" + (numPaidStudents + numChaperones) + ".00 for this trip</b>")
 }
 
 function paymentTypeChanged() {
