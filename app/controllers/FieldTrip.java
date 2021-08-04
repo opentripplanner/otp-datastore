@@ -9,13 +9,7 @@ import models.fieldtrip.GroupItinerary;
 import models.fieldtrip.GTFSTrip;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import static controllers.Application.checkLogin;
-import static controllers.Calltaker.checkAccess;
 import play.*;
 import play.mvc.*;
 
@@ -26,18 +20,37 @@ import models.*;
 import models.fieldtrip.FieldTripNote;
 import play.data.binding.As;
 
-import javax.ws.rs.core.MediaType;
-import com.sun.jersey.api.client.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
-import org.apache.commons.codec.digest.DigestUtils;
 
 
 public class FieldTrip extends Application {
+
+    /**
+     * Gson exclusion strategy designed to skip fields that could contribute to an overly large JSON response.
+     */
+    private static final ExclusionStrategy FIELD_TRIP_EXCLUSION_STRATEGY = new ExclusionStrategy() {
+        public boolean shouldSkipField(FieldAttributes fa) {
+            String name = fa.getName();
+            return(name.equals("trips") || name.equals("notes") || name.equals("feedback"));
+        }
+        public boolean shouldSkipClass(Class<?> type) {
+            return false;
+        }
+    };
+
+    /**
+     * Construct Gson writer to skip large fields for the shortened {@link FieldTripRequest} summary response.
+     */
+    private static final Gson fieldTripSummaryWriter = new GsonBuilder()
+        .excludeFieldsWithoutExposeAnnotation()
+        .setExclusionStrategies(FIELD_TRIP_EXCLUSION_STRATEGY)
+        .serializeNulls()
+        .create();
     
     @Util
     public static void checkAccess(TrinetUser user) {
