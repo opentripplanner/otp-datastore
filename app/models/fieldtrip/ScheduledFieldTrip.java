@@ -21,7 +21,8 @@ public class ScheduledFieldTrip extends GenericModel {
 
     @ManyToOne(optional=false)
     public FieldTripRequest request;
-    
+
+    /** 0 for outbound, 1 for inbound */
     @Expose
     public Integer requestOrder;
 

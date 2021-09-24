@@ -9,13 +9,7 @@ import models.fieldtrip.GroupItinerary;
 import models.fieldtrip.GTFSTrip;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import static controllers.Application.checkLogin;
-import static controllers.Calltaker.checkAccess;
 import play.*;
 import play.mvc.*;
 
@@ -26,18 +20,37 @@ import models.*;
 import models.fieldtrip.FieldTripNote;
 import play.data.binding.As;
 
-import javax.ws.rs.core.MediaType;
-import com.sun.jersey.api.client.*;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
-import org.apache.commons.codec.digest.DigestUtils;
 
 
 public class FieldTrip extends Application {
+
+    /**
+     * Gson exclusion strategy designed to skip fields that could contribute to an overly large JSON response.
+     */
+    private static final ExclusionStrategy fieldTripExclusionStrategy = new ExclusionStrategy() {
+        public boolean shouldSkipField(FieldAttributes fa) {
+            String name = fa.getName();
+            return(name.equals("trips") || name.equals("notes") || name.equals("feedback"));
+        }
+        public boolean shouldSkipClass(Class<?> type) {
+            return false;
+        }
+    };
+
+    /**
+     * Construct Gson writer to skip large fields for the shortened {@link FieldTripRequest} summary response.
+     */
+    private static final Gson fieldTripSummaryWriter = new GsonBuilder()
+        .excludeFieldsWithoutExposeAnnotation()
+        .setExclusionStrategies(fieldTripExclusionStrategy)
+        .serializeNulls()
+        .create();
     
     @Util
     public static void checkAccess(TrinetUser user) {
@@ -291,6 +304,12 @@ public class FieldTrip extends Application {
         checkAccess(user);
       
         ScheduledFieldTrip trip = ScheduledFieldTrip.findById(id);
+        if (trip.requestOrder == 0) {
+            trip.request.outboundTripStatus = null;
+        } else {
+            trip.request.inboundTripStatus = null;
+        }
+        trip.request.save();
         trip.delete();
         renderJSON(id);
     }
@@ -436,29 +455,10 @@ public class FieldTrip extends Application {
       
         List<FieldTripRequest> requests;
         String sql = "order by timeStamp desc";
-        if(limit == null)
-            requests = FieldTripRequest.find(sql).fetch();
-        else {
-            requests = FieldTripRequest.find(sql).fetch(limit);
-        }
+        if (limit == null) requests = FieldTripRequest.find(sql).fetch();
+        else requests = FieldTripRequest.find(sql).fetch(limit);
 
-        Gson gson = new GsonBuilder()
-          .excludeFieldsWithoutExposeAnnotation()
-          .setExclusionStrategies(new ExclusionStrategy() {
-
-            public boolean shouldSkipField(FieldAttributes fa) {
-                String name = fa.getName();
-                return(name.equals("trips") || name.equals("notes") || name.equals("feedback"));
-            }
-
-            public boolean shouldSkipClass(Class<?> type) {
-                return false;
-            }
-              
-          })
-          .serializeNulls()
-          .create();
-        renderJSON(gson.toJson(requests));
+        renderJSON(fieldTripSummaryWriter.toJson(requests));
     }
     
     public static void setRequestStatus(long requestId, String status) {
@@ -549,7 +549,6 @@ public class FieldTrip extends Application {
     public static void setRequestGroupSize(long requestId, int numStudents, int numFreeStudents, int numChaperones) {
         TrinetUser user = checkLogin();
         checkAccess(user);
-
         FieldTripRequest req = FieldTripRequest.findById(requestId);
         if(req != null) {
             req.numStudents = numStudents;
@@ -657,12 +656,7 @@ public class FieldTrip extends Application {
         List<FieldTripRequest> requests;
         if(date2 == null) requests = FieldTripRequest.find(query, teacherValue, schoolValue, date1).fetch();
         else requests = FieldTripRequest.find(query, teacherValue, schoolValue, date1, date2).fetch();
-
-        Gson gson = new GsonBuilder()
-          .excludeFieldsWithoutExposeAnnotation()  
-          .serializeNulls()
-          .create();
-        renderJSON(gson.toJson(requests));
+        renderJSON(fieldTripSummaryWriter.toJson(requests));
     }
         
     /* Receipt Generation */
