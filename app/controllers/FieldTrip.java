@@ -33,7 +33,7 @@ public class FieldTrip extends Application {
     /**
      * Gson exclusion strategy designed to skip fields that could contribute to an overly large JSON response.
      */
-    private static final ExclusionStrategy FIELD_TRIP_EXCLUSION_STRATEGY = new ExclusionStrategy() {
+    private static final ExclusionStrategy fieldTripExclusionStrategy = new ExclusionStrategy() {
         public boolean shouldSkipField(FieldAttributes fa) {
             String name = fa.getName();
             return(name.equals("trips") || name.equals("notes") || name.equals("feedback"));
@@ -48,7 +48,7 @@ public class FieldTrip extends Application {
      */
     private static final Gson fieldTripSummaryWriter = new GsonBuilder()
         .excludeFieldsWithoutExposeAnnotation()
-        .setExclusionStrategies(FIELD_TRIP_EXCLUSION_STRATEGY)
+        .setExclusionStrategies(fieldTripExclusionStrategy)
         .serializeNulls()
         .create();
     
@@ -549,10 +549,6 @@ public class FieldTrip extends Application {
     public static void setRequestGroupSize(long requestId, int numStudents, int numFreeStudents, int numChaperones) {
         TrinetUser user = checkLogin();
         checkAccess(user);
-        System.out.println(requestId);
-        System.out.println(numStudents);
-        System.out.println(numChaperones);
-        System.out.println(numFreeStudents);
         FieldTripRequest req = FieldTripRequest.findById(requestId);
         if(req != null) {
             req.numStudents = numStudents;
