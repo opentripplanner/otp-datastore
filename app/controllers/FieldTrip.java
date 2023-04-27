@@ -540,6 +540,10 @@ public class FieldTrip extends Application {
                 trip.delete();
             }
             renderJSON(requestId);
+
+            // Need to reset trip status when request date changes
+            req.outboundTripStatus = null;
+            req.inboundTripStatus = null;
         }
         else {
             badRequest();
