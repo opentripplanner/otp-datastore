@@ -205,8 +205,11 @@ public class FieldTrip extends Application {
         for(int i = 0; i < itins.length; i++) {
             GroupItinerary itin = itins[i];
             for(GTFSTrip gtrip : gtfsTrips[i]) {
+                // sending a 'null' value to find("tripHash = ?") w/postgres causes type errors
+		// @see: https://stackoverflow.com/questions/63971110
+                if(gtrip.tripHash == null) continue;
+
                 List<GTFSTrip> tripsInUse = GTFSTrip.find("tripHash = ?", gtrip.tripHash).fetch();
-                
                 if(!tripsInUse.isEmpty()) {
                     int capacityInUse = 0;
                     for(GTFSTrip tripInUse : tripsInUse) {
