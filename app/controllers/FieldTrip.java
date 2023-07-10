@@ -206,8 +206,11 @@ public class FieldTrip extends Application {
             GroupItinerary itin = itins[i];
             for(GTFSTrip gtrip : gtfsTrips[i]) {
                 // sending a 'null' value to find("tripHash = ?") w/postgres causes type errors
-		// @see: https://stackoverflow.com/questions/63971110
-                if(gtrip.tripHash == null) continue;
+                // @see: https://stackoverflow.com/questions/63971110
+                if(gtrip.tripHash == null) {
+                    System.out.println("WARN: fieldtrips might get double-booked. With tripHash == null, overlapping/duplicate fieldtrip integrity check is bypassed.");
+                    continue;
+                }
 
                 List<GTFSTrip> tripsInUse = GTFSTrip.find("tripHash = ?", gtrip.tripHash).fetch();
                 if(!tripsInUse.isEmpty()) {
@@ -411,7 +414,7 @@ public class FieldTrip extends Application {
         
         //if(cal.after(now)) return true;
         
-        return true;	
+        return true;
     }
 
     public static void getRequest(long requestId) {
