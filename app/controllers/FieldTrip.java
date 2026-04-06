@@ -550,6 +550,60 @@ public class FieldTrip extends Application {
         }        
     }
 
+    public static void setRequestArriveDestinationTime(long requestId, @As("hh:mma") Date time) {
+        TrinetUser user = checkLogin();
+        checkAccess(user);
+
+        FieldTripRequest req = FieldTripRequest.findById(requestId);
+        if(req != null) {
+            req.arriveDestinationTime = time;
+            req.save();
+            renderJSON(requestId);
+
+            // Need to reset outbound trip status when destination arrival time changes
+            req.outboundTripStatus = null;
+        }
+        else {
+            badRequest();
+        }
+    }
+
+    public static void setRequestLeaveDestinationTime(long requestId, @As("hh:mma") Date time) {
+        TrinetUser user = checkLogin();
+        checkAccess(user);
+
+        FieldTripRequest req = FieldTripRequest.findById(requestId);
+        if(req != null) {
+            req.leaveDestinationTime = time;
+            req.save();
+            renderJSON(requestId);
+
+            // Need to reset inbound trip status when departure time changes
+            req.inboundTripStatus = null;
+        }
+        else {
+            badRequest();
+        }
+    }
+
+    public static void setRequestArriveSchoolTime(long requestId, @As("hh:mma") Date time) {
+        TrinetUser user = checkLogin();
+        checkAccess(user);
+
+        FieldTripRequest req = FieldTripRequest.findById(requestId);
+        if(req != null) {
+            req.arriveSchoolTime = time;
+            req.save();
+            renderJSON(requestId);
+
+            // Need to reset inbound trip status when school arrival time changes
+            req.inboundTripStatus = null;
+        }
+        else {
+            badRequest();
+        }
+    }
+
     public static void setRequestGroupSize(long requestId, int numStudents, int numFreeStudents, int numChaperones) {
         TrinetUser user = checkLogin();
         checkAccess(user);
