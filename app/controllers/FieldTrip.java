@@ -550,7 +550,7 @@ public class FieldTrip extends Application {
         }        
     }
 
-    public static void setRequestArriveDestinationTime(long requestId, @As("hh:mma") Date time) {
+    public static void setRequestArriveDestinationTime(long requestId, @As("HH:mm") Date time) {
         TrinetUser user = checkLogin();
         checkAccess(user);
 
@@ -568,7 +568,7 @@ public class FieldTrip extends Application {
         }
     }
 
-    public static void setRequestLeaveDestinationTime(long requestId, @As("hh:mma") Date time) {
+    public static void setRequestLeaveDestinationTime(long requestId, @As("HH:mm") Date time) {
         TrinetUser user = checkLogin();
         checkAccess(user);
 
@@ -586,7 +586,7 @@ public class FieldTrip extends Application {
         }
     }
 
-    public static void setRequestArriveSchoolTime(long requestId, @As("hh:mma") Date time) {
+    public static void setRequestArriveSchoolTime(long requestId, @As("HH:mm") Date time) {
         TrinetUser user = checkLogin();
         checkAccess(user);
 
